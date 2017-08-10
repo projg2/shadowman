@@ -1,6 +1,8 @@
 # Copyright (c) 2017 Michał Górny
 # Distributed under the terms of the 2-clause BSD license
 
+inherit package-manager
+
 DESCRIPTION="Manage compiler shadow link directories (distcc, ccache)"
 MAINTAINER="mgorny@gentoo.org"
 VERSION=0
@@ -35,6 +37,13 @@ get_installed_tools() {
 			echo "${t}"
 	done
 }
+
+# print list of compilers used by the package manager
+get_pm_compilers() {
+	# TODO: can we get some valid package name out of it?
+	envvar sys-apps/baselayout CC
+	envvar sys-apps/baselayout CXX
+}
 # }}}
 
 ## {{{ update masquerade
@@ -58,7 +67,10 @@ do_update() {
 	shopt -s nullglob
 
 	[[ ${tools} == all ]] && tools=( $(get_installed_tools) )
-	[[ ${wildcards} ]] || wildcards=( "${MASQ_COMPILER_WILDCARDS[@]}" )
+	[[ ${wildcards} ]] || wildcards=(
+		"${MASQ_COMPILER_WILDCARDS[@]}"
+		$(get_pm_compilers)
+	)
 	local t
 	for t in "${tools[@]}"; do
 		has "${t}" "${MASQ_TOOLS[@]}" || die -q "Unknown tool: ${t}"
