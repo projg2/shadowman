@@ -1,0 +1,30 @@
+. . . . . . shadowman . . . . . .
+compiler shadow directory manager
+( 2-BSD licensed eselect module )
+
+
+shadowman is a management tool for compiler shadow directories that
+are used by ccache, distcc, icecc and similar tools.
+
+Why? Because right now, Gentoo bundles its own *-config tool for every
+program out there. Each of these tools has different usage and different
+limitations.
+
+The idea behind shadowman is to provide a single tool that supports all
+the compiler wrappers out there, and that can easily be extended to
+support more. This has a number of advantages:
+
+1. one usage syntax that works for all tools,
+
+2. ability to update/clean masquerades for multiple tools in one call,
+
+3. consistent (and *good*) implementation -- now all tools get the same
+executable list,
+
+4. reduced code duplication.
+
+shadowman can not only replace the existing *-config tools but also
+extend their usefulness. For example, toolchain packages can be extended
+to call 'eselect compiler-shadow update all' in postinst and save
+the user from manually updating shadow directories post compiler
+upgrades.
