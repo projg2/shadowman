@@ -14,7 +14,7 @@ all:
 install: install-eselect install-modules-compiler install-modules-tool
 
 install-eselect: compiler-shadow.eselect
-	install -d "$(DESTDIR)$(moduledir)"
+	install -d "$(DESTDIR)$(eselectdir)"
 	rm -f $<.tmp
 	sed -e "s@^\(MASQ_MODULEDIR=\).*\$$@\1$(moduledir)@" $< > $<.tmp
 	install -m0644 $<.tmp "$(DESTDIR)$(eselectdir)/$<"
