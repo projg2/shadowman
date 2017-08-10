@@ -8,6 +8,9 @@ moduledir = $(datadir)/shadowman
 INSTALL_MODULES_COMPILER = clang gcc posix
 INSTALL_MODULES_TOOL = ccache distcc icecc
 
+all:
+	:
+
 install: install-eselect install-modules-compiler install-modules-tool
 
 install-eselect: compiler-shadow.eselect
@@ -31,4 +34,4 @@ install-modules-tool:
 			exit $${?}; \
 	done
 
-.PHONY: install install-eselect install-modules-compiler install-modules-tool
+.PHONY: all install install-eselect install-modules-compiler install-modules-tool
