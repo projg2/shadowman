@@ -127,4 +127,37 @@ do_clean() {
 }
 ## }}}
 
+## {{{ remove masquerade dir
+describe_remove() {
+	echo "Remove the shadow directory completely"
+}
+
+describe_remove_parameters() {
+	echo "<tool>"
+}
+
+describe_remove_options() {
+	echo "<tool>     : Tool(s) to remove or (${MASQ_TOOLS[*]})"
+}
+
+do_remove() {
+	[[ ${1} ]] || die -q "No tool specified for removal"
+	local tools=( ${1} )
+
+	shopt -s nullglob
+
+	[[ ${tools} == all ]] && die -q "Implicitly removing all tools is not allowed"
+	local t
+	for t in "${tools[@]}"; do
+		has "${t}" "${MASQ_TOOLS[@]}" || die -q "Unknown tool: ${t}"
+		echo "Removing masquerade for ${t} ..."
+
+		local out_dir_var=MASQ_DIR_${t}
+		local out_dir=${!out_dir_var}
+
+		rm -v -r -f "${out_dir}" || die
+	done
+}
+## }}}
+
 # vim: ts=4 sw=4 noet fdm=marker
