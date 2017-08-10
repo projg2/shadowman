@@ -88,4 +88,43 @@ do_update() {
 }
 ## }}}
 
+## {{{ clean stale symlinks
+describe_clean() {
+	echo "Clean stale symlinks from the shadow directory"
+}
+
+describe_clean_parameters() {
+	echo "[<tool>|all]"
+}
+
+describe_clean_options() {
+	echo "<tool>     : Tool(s) to clean or 'all' (the default) to update all (${MASQ_TOOLS[*]})"
+}
+
+do_clean() {
+	local tools=( ${1:-all} )
+
+	shopt -s nullglob
+
+	[[ ${tools} == all ]] && tools=( $(get_installed_tools) )
+	local t
+	for t in "${tools[@]}"; do
+		has "${t}" "${MASQ_TOOLS[@]}" || die -q "Unknown tool: ${t}"
+		echo "Cleaning up masquerade for ${t} ..."
+
+		local out_dir_var=MASQ_DIR_${t}
+		local out_dir=${!out_dir_var}
+
+		[[ -d ${out_dir} ]] || continue
+		cd "${out_dir}" || die
+		local p
+		for p in *; do
+			if ! type -P "${p}" &>/dev/null; then
+				rm -v "${p}"
+			fi
+		done
+	done
+}
+## }}}
+
 # vim: ts=4 sw=4 noet fdm=marker
