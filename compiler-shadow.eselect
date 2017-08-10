@@ -7,12 +7,16 @@ DESCRIPTION="Manage compiler shadow link directories (distcc, ccache)"
 MAINTAINER="mgorny@gentoo.org"
 VERSION=0
 
+# {{{ substitution variables
+MASQ_LIBDIR=lib
+# }}}
+
 # {{{ tool data
 MASQ_TOOLS=( ccache distcc icecc )
 
 MASQ_DIR_ccache=${EPREFIX}/usr/lib/ccache/bin
 # TODO: account for get_libdir
-MASQ_DIR_distcc=${EPREFIX}/usr/lib64/distcc/bin
+MASQ_DIR_distcc=${EPREFIX}/usr/${MASQ_LIBDIR}/distcc/bin
 MASQ_DIR_icecc=${EPREFIX}/usr/libexec/icecc/bin
 
 MASQ_COMPILER_DIR=${EPREFIX}/usr/bin
