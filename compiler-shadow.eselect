@@ -180,7 +180,7 @@ describe_remove_parameters() {
 }
 
 describe_remove_options() {
-	echo "<tool>     : Tool(s) to remove or (${MASQ_TOOLS[*]})"
+	echo "<tool>     : Tool(s) to remove (${MASQ_TOOLS[*]})"
 }
 
 do_remove() {
