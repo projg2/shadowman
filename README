@@ -21,10 +21,39 @@ support more. This has a number of advantages:
 3. consistent (and *good*) implementation -- now all tools get the same
 executable list,
 
-4. reduced code duplication.
+4. reduced code duplication,
+
+5. modular layout that allows adding extra tools/compiler wildcards
+by third-party packages.
 
 shadowman can not only replace the existing *-config tools but also
 extend their usefulness. For example, toolchain packages can be extended
 to call 'eselect compiler-shadow update all' in postinst and save
 the user from manually updating shadow directories post compiler
 upgrades.
+
+
+shadowman uses compiler and tool modules to provide support for
+different programs. Those are installed to
+/usr/share/shadowman/compilers and /usr/share/shadowman/tools
+by default.
+
+A compiler module is a text file whose first (and only) line contains
+one or more compiler name wildcards in bash syntax. For example,
+the default 'posix' module has:
+
+    {,*-}{cc,c99,c++}
+
+shadowman uses wildcards from all compiler modules found, unless
+the user provides an alternate wildcard to use. The compilers found
+in any directory of PATH matching the wildcards are used.
+
+A tool module is a text file whose filename matches the tool executable
+name and whose first (and only) line contains the path to the respective
+shadow directory. For example, the 'ccache' module has:
+
+    /usr/lib/ccache/bin
+
+shadowman enables support for all the tools whose executable is found
+in PATH (i.e. the 'ccache' tool is enabled if 'ccache' can be found
+in PATH).

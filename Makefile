@@ -2,13 +2,33 @@ prefix = /usr
 libdir = $(prefix)/lib
 datarootdir = $(prefix)/share
 datadir = $(datarootdir)
-moduledir = $(datadir)/eselect/modules
+eselectdir = $(datadir)/eselect/modules
+moduledir = $(datadir)/shadowman
 
-install: compiler-shadow.eselect
+INSTALL_MODULES_COMPILER = clang gcc posix
+INSTALL_MODULES_TOOL = ccache distcc icecc
+
+install: install-eselect install-modules-compiler install-modules-tool
+
+install-eselect: compiler-shadow.eselect
 	install -d "$(DESTDIR)$(moduledir)"
 	rm -f $<.tmp
-	libdir="$(libdir)"; sed -e "s@^\(MASQ_LIBDIR=\).*\$$@\1$${libdir##*/}@" $< > $<.tmp
-	install -m0644 $<.tmp "$(DESTDIR)$(moduledir)/$<"
+	sed -e "s@^\(MASQ_MODULEDIR=\).*\$$@\1$(moduledir)@" $< > $<.tmp
+	install -m0644 $<.tmp "$(DESTDIR)$(eselectdir)/$<"
 	rm -f $<.tmp
 
-.PHONY: install
+install-modules-compiler:
+	install -d "$(DESTDIR)$(moduledir)/compilers"
+	for f in $(INSTALL_MODULES_COMPILER); do \
+		install -m0644 modules/compilers/"$${f}" "$(DESTDIR)$(moduledir)/compilers/" || \
+			exit $${?}; \
+	done
+
+install-modules-tool:
+	install -d "$(DESTDIR)$(moduledir)/tools"
+	for f in $(INSTALL_MODULES_TOOL); do \
+		install -m0644 modules/tools/"$${f}" "$(DESTDIR)$(moduledir)/tools/" || \
+			exit $${?}; \
+	done
+
+.PHONY: install install-eselect install-modules-compiler install-modules-tool

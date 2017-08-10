@@ -8,27 +8,54 @@ MAINTAINER="mgorny@gentoo.org"
 VERSION=0
 
 # {{{ substitution variables
-MASQ_LIBDIR=lib
+MASQ_MODULEDIR=$(dirname $(realpath "${BASH_SOURCE}"))/modules
 # }}}
 
-# {{{ tool data
-MASQ_TOOLS=( ccache distcc icecc )
+# {{{ configuration loaders
+load_compilers() {
+	cd "${MASQ_MODULEDIR}"/compilers || die "Unable to enter ${MASQ_MODULEDIR}/compilers"
 
-MASQ_DIR_ccache=${EPREFIX}/usr/lib/ccache/bin
-# TODO: account for get_libdir
-MASQ_DIR_distcc=${EPREFIX}/usr/${MASQ_LIBDIR}/distcc/bin
-MASQ_DIR_icecc=${EPREFIX}/usr/libexec/icecc/bin
+	shopt -s nullglob
+	local files=( * )
+	shopt -u nullglob
 
-MASQ_COMPILER_DIR=${EPREFIX}/usr/bin
-MASQ_COMPILER_WILDCARDS=(
-	# includes:
-	# - basic symlinks: cc, c++, c99
-	# - gcc: gcc, g++
-	# - clang: clang, clang++
-	# any PREFIX- is allowed (to account for CHOST)
-	# version-like -SUFFIX is allowed
-	{,'*-'}{cc,c++,c99,g{cc,++},clang{,++}}{,'-[0-9]*'}
-)
+	MASQ_COMPILER_WILDCARDS=()
+	shopt -s noglob
+	local f
+	for f in "${files[@]}"; do
+		local wildcards
+		{
+			# 1st line has wildcards
+			read -r wildcards
+			# we ignore remaining lines for future extensions
+		} <"${f}"
+
+		eval "MASQ_COMPILER_WILDCARDS+=( ${wildcards} )"
+	done
+	shopt -u noglob
+}
+
+load_tools() {
+	cd "${MASQ_MODULEDIR}"/tools || die "Unable to enter ${MASQ_MODULEDIR}/tools"
+
+	shopt -s nullglob
+	local files=( * )
+	shopt -u nullglob
+
+	MASQ_TOOLS=()
+	local f
+	for f in *; do
+		{
+			# 1st line has masq dir path
+			read -r "MASQ_DIR_${f}"
+			# we ignore remaining lines for future extensions
+		} <"${f}"
+		MASQ_TOOLS+=( "${f}" )
+	done
+}
+
+load_compilers
+load_tools
 # }}}
 
 # {{{ helper functions
