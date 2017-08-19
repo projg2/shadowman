@@ -44,7 +44,7 @@ load_tools() {
 
 	MASQ_TOOLS=()
 	local f
-	for f in *; do
+	for f in "${files[@]}"; do
 		{
 			# 1st line has masq dir path
 			read -r "MASQ_DIR_${f}"
