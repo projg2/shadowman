@@ -20,7 +20,7 @@ load_compilers() {
 	shopt -u nullglob
 
 	MASQ_COMPILER_WILDCARDS=()
-	shopt -s noglob
+	shopt -o -s noglob
 	local f
 	for f in "${files[@]}"; do
 		local wildcards
@@ -32,7 +32,7 @@ load_compilers() {
 
 		eval "MASQ_COMPILER_WILDCARDS+=( ${wildcards} )"
 	done
-	shopt -u noglob
+	shopt -o -u noglob
 }
 
 load_tools() {
