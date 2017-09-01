@@ -30,7 +30,7 @@ load_compilers() {
 			# we ignore remaining lines for future extensions
 		} <"${f}"
 
-		eval "MASQ_COMPILER_WILDCARDS+=( ${wildcards} )"
+		declare -g -a "MASQ_COMPILER_WILDCARDS+=(${wildcards})"
 	done
 	shopt -o -u noglob
 }
