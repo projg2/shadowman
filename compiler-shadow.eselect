@@ -68,13 +68,6 @@ get_installed_tools() {
 			echo "${t}"
 	done
 }
-
-# print list of compilers used by the package manager
-get_pm_compilers() {
-	# TODO: can we get some valid package name out of it?
-	envvar sys-apps/baselayout CC
-	envvar sys-apps/baselayout CXX
-}
 # }}}
 
 ## {{{ update masquerade
@@ -100,7 +93,6 @@ do_update() {
 	[[ ${tools} == all ]] && tools=( $(get_installed_tools) )
 	[[ ${wildcards} ]] || wildcards=(
 		"${MASQ_COMPILER_WILDCARDS[@]}"
-		$(get_pm_compilers)
 	)
 	local t
 	for t in "${tools[@]}"; do
