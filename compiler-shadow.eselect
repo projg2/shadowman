@@ -154,6 +154,11 @@ do_clean() {
 		cd "${out_dir}" || die
 		local p
 		for p in *; do
+			if [[ -d ${p} ]]; then
+				# Avoid removing distcc compat symlink
+				# https://bugs.gentoo.org/942759
+				continue
+			fi
 			if ! type -P "${p}" &>/dev/null; then
 				rm -v "${p}"
 			fi
