@@ -5,7 +5,7 @@ inherit package-manager
 
 DESCRIPTION="Manage compiler shadow link directories (distcc, ccache)"
 MAINTAINER="mgorny@gentoo.org"
-VERSION=4
+VERSION=5
 
 # {{{ substitution variables
 MASQ_MODULEDIR=$(dirname $(realpath "${BASH_SOURCE}"))/modules
