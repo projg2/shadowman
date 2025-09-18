@@ -6,7 +6,7 @@ eselectdir = $(datadir)/eselect/modules
 moduledir = $(datadir)/shadowman
 
 INSTALL_MODULES_COMPILER = clang gcc posix
-INSTALL_MODULES_TOOL = ccache distcc icecc
+INSTALL_MODULES_TOOL = ccache distcc icecc sccache
 
 all:
 	:
